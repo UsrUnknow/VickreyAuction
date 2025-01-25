@@ -9,77 +9,43 @@ AuctionApp is a Blazor web application that implements an auction system. Users 
 ```bash
 usrunknow-vickreyauction/
 ├── 📄 README.md
-│   └── 📝 Documentation file that describes the project and its features.
+│   └── 📝 Principal documentation file explaining the project setup and usage.
 ├── 🗂️  VickreyAuction.sln
-│   └── 🛠 Solution file for the entire VickreyAuction project.
+│   └── 🛠 Solution file to manage and build the entire project.
 ├── 📂 Core/
-│   ├── 🗂️  Core.csproj
-│   │   └── 🛠 Project file for the core logic and services.
-│   ├── 📂 Interfaces/
-│   │   └── 📄 IAuctionService.cs
-│   │       └── 🔌 Interface defining the methods and logic required by auction services.
 │   ├── 📂 Models/
 │   │   ├── 📄 Bid.cs
-│   │   │   └── 🏷 Represents an individual bid with properties like bid amount and bidder name.
+│   │   │   └── 🏷 Represents a bid, including bid amount and bidder details.
 │   │   ├── 📄 Bidder.cs
-│   │   │   └── 👤 Represents a bidder, encompassing their name and list of bids.
+│   │   │   └── 👤 Represents a bidder and their associated bids.
 │   │   └── 📄 Result.cs
-│   │       └── 🏆 Represents auction results, including the winner and winning bid amount.
+│   │       └── 🏆 Models auction results (winner, amount, etc.).
 │   └── 📂 Services/
 │       └── 📄 AuctionService.cs
-│           └── ⚙️ Contains business logic for running Vickrey auctions and determining winners.
+│           └── ⚙️ Core business logic for managing Vickrey auction behavior.
 ├── 📂 Tests/
-│   ├── 🗂️  Tests.csproj
-│   │   └── 🧪 Project file for the test suite, targeting logic validation.
-│   └── 📂 Services/
-│       └── 📄 AuctionServiceTests.cs
-│           └── ✅ Unit tests to ensure `AuctionService` behaves as expected for edge cases.
+│   └── 📄 AuctionServiceTests.cs
+│       └── ✅ Key unit tests to verify the correctness of auction logic (edge cases, functionalities).
 └── 📂 UI/
     ├── 📄 Program.cs
-    │   └── 🚀 Entry point for the Blazor-based web application.
-    ├── 🗂️  UI.csproj
-    │   └── 🛠 Project file for the UI layer.
-    ├── 📄 appsettings.Development.json
-    │   └── 🔧 Configuration settings specific to development mode.
+    │   └── 🚀 Application entry point for the Blazor app.
+    ├── 📂 Pages/
+    │   ├── 📄 AddBidderForm.razor
+    │   │   └── ➕ Form to add bidders and their bids manually.
+    │   ├── 📄 Auction.razor
+    │   │   └── 🏆 Displays auction information and results.
+    │   ├── 📄 AuctionActions.razor
+    │   │   └── ⚙️ Provides functionality to start/reset the auction.
+    │   └── 📄 BidderList.razor
+    │       └── 👥 Displays the list of bidders and their respective bids.
     ├── 📄 appsettings.json
-    │   └── 🔧 General configuration settings applicable to all environments.
-    ├── 📂 Components/
-    │   ├── 📄 App.razor
-    │   │   └── 🌐 Root component of the Blazor application.
-    │   ├── 📄 Routes.razor
-    │   │   └── 🗺 Routes and navigation details for the app.
-    │   ├── 📄 _Imports.razor
-    │   │   └── 🛠 Shared Razor imports for reusability across components.
-    │   ├── 📂 Layout/
-    │   │   ├── 📄 MainLayout.razor
-    │   │   │   └── ✨ Main layout structure for the app.
-    │   │   ├── 📄 MainLayout.razor.css
-    │   │   │   └── 🎨 Custom styles for the main layout.
-    │   │   ├── 📄 NavMenu.razor
-    │   │   │   └── 🗂 Navigation menu for the app.
-    │   │   └── 📄 NavMenu.razor.css
-    │   │       └── 🎨 Styles for the navigation menu.
-    │   └── 📂 Pages/
-    │       ├── 📄 AddBidderForm.razor
-    │       │   └── ➕ Form for adding bidders to the auction.
-    │       ├── 📄 Auction.razor
-    │       │   └── 🏆 Page displaying auction details and results.
-    │       ├── 📄 AuctionActions.razor
-    │       │   └── ⚙️ Component for starting/resetting the auction.
-    │       ├── 📄 BidderList.razor
-    │       │   └── 👥 Displays the list of bidders and their bids.
-    │       ├── 📄 Error.razor
-    │       │   └── ❌ Error page for handling application exceptions.
-    │       └── 📄 FileImporter.razor
-    │           └── 🗂️ Component for uploading bidder data via JSON/CSV.
-    ├── 📂 Properties/
-    │   └── 📄 launchSettings.json
-    │       └── ⚙️ Settings for configuring how the app launches in different environments.
+    │   └── 🔧 Primary configuration file for the app (environments, defaults).
     └── 📂 wwwroot/
         ├── 🎨 app.css
-        │   └── 💅 Styling for the application's UI.
+        │   └── 💅 Styles to control the appearance of the app.
         └── 🌐 bootstrap/
-            └── 🎨 Bootstrap framework files for base styling.
+            └── 🎨 Bootstrap framework for consistent and responsive design.
+
 ```
    - Légende :
      - 📁/📂 : Indiquent les dossiers et sous-dossiers.
