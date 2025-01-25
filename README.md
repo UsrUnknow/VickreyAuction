@@ -120,4 +120,72 @@ AuctionApp is a Blazor web application that implements an auction system. Users 
   - `AuctionServiceTests`: Validates `AuctionService` for various edge cases.
 - **Key Test Scenarios:**
   - ❌ No valid bids => "No Winner".
-  - ✅ A single valid bid => Winner is the only bidder. 
+  - ✅ A single valid bid => Winner is the only bidder.
+  - 🔢 Multiple valid bids => Winner is the bidder with the highest bid.
+  - 🔄 Handle ties in bids => Winner is the first valid bidder in case of ties.
+
+---
+
+## 🎯 Example Workflow
+
+1. ➕ Add bidders manually or import them:
+   - Use the **Add Bidders Form** to add bidders with their bids.
+   - 📤 Import bidders using a JSON or CSV file upload.
+     - JSON format:
+       ```json
+       [
+           { "Name": "A", "Bids": [110, 130] },
+           { "Name": "B", "Bids": [] },
+           { "Name": "C", "Bids": [125] }
+       ]
+       ```
+     - CSV format example:
+       ```
+       A, 110, 130
+       B
+       C, 125
+       ```
+2. Set the reserve price for the auction.
+3. 🏁 Click the **Start Auction** button to determine the winner.
+4. 🏆 View the results: Winner's name and the final price.
+
+---
+
+## ✅ Testing
+
+Run the test suite to verify the functionality of the `AuctionService`:
+
+1. Navigate to the test project:
+   ```bash
+   cd AuctionApp.Tests
+   ```
+2. Run the tests:
+   ```bash
+   dotnet test
+   ```
+3. 🚦 The tests will validate edge cases such as:
+   - ❌ No valid bids.
+   - ✅ Multiple valid bids.
+   - 🔄 Tie handling.
+
+---
+
+## 🛠 Technologies Used
+
+- 🧩 **Blazor WebAssembly**: Front-end UI for the application.
+- ⚙️ **ASP.NET Core**: Web framework for facilitating server-side rendering.
+- 🚀 **.NET 6**: For building the core, UI, and testing libraries.
+- 🧪 **xUnit**: For writing unit tests.
+
+---
+
+## 🚀 Future Enhancements
+
+- 🔄 **Add multi-round auctions.**
+- 🔒 **Implement login and authentication for user roles.**
+- 🏆 **Expand to Vickrey (second-price sealed-bid) auction logic.**
+- 📊 **Enhance the UI with bidder statistics.**
+
+---
+
+If you have any issues, questions, or feature requests, please open an issue in the repository. 🎉 Happy bidding!
