@@ -6,37 +6,24 @@ AuctionApp is a Blazor web application that implements an auction system. Users 
 
 ## Project Structure
 
-.
-├── AuctionApp.sln
-├── │
-├── ├── AuctionApp.Core/
-├── │   ├── Models/
-├── │   │   ├── Bid.cs         # Model representing an individual bid
-├── │   │   ├── Bidder.cs      # Model representing a bidder and their bids
-├── │   │   └── Result.cs      # Auction result model
-├── │   ├── Services/
-├── │   │   └── AuctionService.cs  # Business logic for determining auction results
-├── │   ├── Interfaces/
-├── │   │   └── IAuctionService.cs # Auction service interface
-├── │   └── Core.csproj        # Core library project
-├── │
-├── ├── AuctionApp.UI/
-├── │   ├── Pages/
-├── │   │   ├── Index.razor           # Homepage of the application
-├── │   │   └── AuctionResults.razor  # Page to display auction results
-├── │   ├── Shared/
-├── │   │   └── MainLayout.razor      # Default layout for the application
-├── │   ├── wwwroot/                  # Public/static assets like CSS, images
-├── │   ├── Program.cs                # Entry point of the Blazor application
-├── │   └── AuctionApp.UI.csproj      # UI project for the application
-├── │
-├── ├── AuctionApp.Tests/
-├── │   ├── Services/
-├── │   │   └── AuctionServiceTests.cs # Unit tests for the AuctionService
-├── │   ├── AuctionApp.Tests.csproj    # Test project for the application
-├── │
-└── └── README.md                      # Documentation
-
+AuctionApp.sln
+├── AuctionApp.Core/
+│   ├── Models/
+│   │   ├── Bid.cs               <!-- Model representing an individual bid -->
+│   │   ├── Bidder.cs            <!-- Model representing a bidder and their bids -->
+│   │   └── Result.cs            <!-- Auction result model -->
+│   ├── Services/
+│   │   └── AuctionService.cs    <!-- Business logic for determining auction results -->
+│   ├── Interfaces/
+│   │   └── IAuctionService.cs   <!-- Auction service interface -->
+│   └── Core.csproj              <!-- Core library project -->
+├── AuctionApp.UI/
+│   ├── Pages/
+│   │   ├── Index.razor                <!-- Homepage of the application -->
+│   │   └── AuctionResults.keRequestAttrREMreachable.razirjson--> Public/static assets -->ject.)
+|
+     .
+</bordillary aplancheseworthy 
 
 ---
 
