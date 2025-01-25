@@ -1,0 +1,141 @@
+﻿@using System.Globalization
+@using Newtonsoft.Json
+@using Core.Models
+@using Microsoft.AspNetCore.Components.Forms
+@using CsvHelper
+@using CsvHelper.Configuration
+
+@rendermode InteractiveServer
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="text-warning">Importer des enchérisseurs</h4>
+        
+        <p class="text-secondary">Formats acceptés : JSON ou CSV</p>
+        <InputFile OnChange="HandleFileSelected" class="form-control" accept=".json, .csv" />
+
+        @if (ErrorMessage is not null)
+        {
+            <div class="alert alert-danger mt-3">
+                @ErrorMessage
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<List<Bidder>> OnBiddersImported { get; set; }
+    
+    private string? ErrorMessage { get; set; } = null;
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        ErrorMessage = null;
+
+        try
+        {
+            var file = e.File;
+            if (file == null)
+            {
+                ErrorMessage = "Aucun fichier sélectionné.";
+                return;
+            }
+
+            var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+            if (extension == ".json")
+            {
+                await ImportFromJson(file);
+            }
+            else if (extension == ".csv")
+            {
+                await ImportFromCsv(file);
+            }
+            else
+            {
+                ErrorMessage = "Format de fichier non supporté. Veuillez choisir un fichier JSON ou CSV.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de l'importation : {ex.Message}";
+        }
+    }
+
+    private async Task ImportFromJson(IBrowserFile file)
+    {
+        await using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+
+        var jsonContent = await reader.ReadToEndAsync();
+        try
+        {
+            // Désérialisation avec Newtonsoft.Json
+            var importedBidders = JsonConvert.DeserializeObject<List<Bidder>>(jsonContent);
+
+            if (importedBidders?.Any() == true)
+            {
+                await OnBiddersImported.InvokeAsync(importedBidders);
+            }
+            else
+            {
+                ErrorMessage = "Le fichier JSON est vide ou invalide.";
+            }
+        }
+        catch (JsonException ex)
+        {
+            ErrorMessage = $"Erreur dans le fichier JSON : {ex.Message}";
+        }
+    }
+
+    private async Task ImportFromCsv(IBrowserFile file)
+    {
+        await using var stream = file.OpenReadStream();
+        using var       reader = new StreamReader(stream);
+
+        try
+        {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord   = false,            // Pas d'en-têtes dans votre fichier CSV
+                TrimOptions       = TrimOptions.Trim, // Pour enlever les espaces superflus
+                MissingFieldFound = null,             // Ignorer si une colonne est manquante
+                BadDataFound      = null              // Ignorer les données malformées
+            };
+
+            using var csv = new CsvReader(reader, config);
+
+            // Lire chaque enregistrement directement depuis CsvHelper
+            var importedBidders = new List<Bidder>();
+            while (await csv.ReadAsync())
+            {
+                var name = csv.GetField(0); // Première colonne : Nom du participant
+                var bids = new List<int>();
+
+                // Parcourt des colonnes des enchères à partir de l'index 1 jusqu'à la fin
+                for (var i = 1; i < csv.Parser.Count; i++)
+                {
+                    if (int.TryParse(csv.GetField(i), out var bid))
+                    {
+                        bids.Add(bid);
+                    }
+                }
+
+                importedBidders.Add(new Bidder { Name = name, Bids = bids });
+            }
+
+            if (importedBidders.Any())
+            {
+                await OnBiddersImported.InvokeAsync(importedBidders);
+            }
+            else
+            {
+                ErrorMessage = "Le fichier CSV est vide ou invalide.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de l'importation CSV : {ex.Message}";
+        }
+    }
+}

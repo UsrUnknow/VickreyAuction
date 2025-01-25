@@ -1,0 +1,54 @@
+﻿@using Core.Models
+@rendermode InteractiveServer
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="text-success">Liste des enchérisseurs :</h4>
+
+        @if (!Bidders.Any())
+        {
+            <div class="alert alert-secondary" role="alert">
+                Aucun enchérisseur pour le moment.
+            </div>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Enchères</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var bidder in Bidders)
+                {
+                    <tr>
+                        <td>
+                            <strong>@bidder.Name</strong>
+                        </td>
+                        <td>
+                            @string.Join(", ", bidder.Bids)
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" @onclick="() => OnBidderRemoved.InvokeAsync(bidder.Name)">
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public List<Bidder> Bidders { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnBidderRemoved { get; set; }
+}

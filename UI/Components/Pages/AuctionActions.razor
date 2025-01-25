@@ -1,0 +1,44 @@
+﻿@using Core.Models
+@using Core.Services
+@rendermode InteractiveServer
+
+<div class="card shadow-sm p-4">
+    <h4 class="text-primary">Lancer l'enchère</h4>
+    <div class="mb-3">
+        <label for="reservePrice" class="form-label">Prix de réserve :</label>
+        <input id="reservePrice" type="number" class="form-control" @bind="ReservePrice" />
+    </div>
+
+    <button type="button" class="btn btn-success w-100 mb-2" @onclick="StartAuction">
+        Lancer l'enchère
+    </button>
+
+    <p class="mt-4"><strong>Résultat :</strong></p>
+    <p class="text-success">Gagnant : <strong>@Winner</strong></p>
+    <p class="text-danger">Prix payé : <strong>@WinningPrice</strong></p>
+</div>
+
+@code {
+    [Parameter]
+    public int ReservePrice { get; set; }
+
+    [Parameter]
+    public List<Bidder> Bidders { get; set; }
+
+    [Parameter]
+    public EventCallback<(string winner, int winningPrice)> OnAuctionStarted { get; set; }
+
+    private string Winner { get; set; } = "Pas encore déterminé";
+    private int WinningPrice { get; set; } = 0;
+
+    private void StartAuction()
+    {
+        var service = new AuctionService();
+        var result  = service.DetermineWinner(ReservePrice, Bidders);
+
+        Winner       = result.Winner;
+        WinningPrice = result.WinningPrice;
+
+        OnAuctionStarted.InvokeAsync((Winner, WinningPrice));
+    }
+}

@@ -1,0 +1,54 @@
+﻿@page "/"
+@using Core.Models
+
+@rendermode InteractiveServer
+
+<PageTitle>Auction</PageTitle>
+
+<div class="container bg-white rounded shadow p-4 mt-4">
+    <h3 class="text-center text-primary">Gestion des enchères</h3>
+
+    <!-- Formulaire pour ajouter un enchérisseur -->
+    <AddBidderForm OnBidderAdded="AddBidder" />
+
+    <!-- Section pour importer les enchérisseurs -->
+    <FileImporter OnBiddersImported="ImportBidders" />
+
+    <!-- Liste des enchérisseurs -->
+    <BidderList Bidders="Bidders" OnBidderRemoved="RemoveBidder" />
+
+    <!-- Actions de l'enchère -->
+    <AuctionActions ReservePrice="@ReservePrice" Bidders="Bidders" OnAuctionStarted="StartAuctionResult" />
+</div>
+
+@code {
+    private List<Bidder> Bidders { get; set; } = new();
+    private int ReservePrice { get; set; } = 0;
+    private string Winner { get; set; } = "Pas encore déterminé";
+    private int WinningPrice { get; set; } = 0;
+
+    private void AddBidder(Bidder newBidder)
+    {
+        Bidders.Add(newBidder);
+    }
+
+    private void ImportBidders(List<Bidder> importedBidders)
+    {
+        Bidders.AddRange(importedBidders);
+    }
+
+    private void RemoveBidder(string bidderName)
+    {
+        var bidderToRemove = Bidders.FirstOrDefault(b => b.Name == bidderName);
+        if (bidderToRemove != null)
+        {
+            Bidders.Remove(bidderToRemove);
+        }
+    }
+
+    private void StartAuctionResult((string winner, int winningPrice) result)
+    {
+        Winner       = result.winner;
+        WinningPrice = result.winningPrice;
+    }
+}

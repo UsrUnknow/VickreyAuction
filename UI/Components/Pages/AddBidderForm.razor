@@ -1,0 +1,48 @@
+﻿@using Core.Models
+
+@rendermode InteractiveServer
+
+<h4 class="text-success">Ajouter un enchérisseur</h4>
+<form class="mb-4 p-3 rounded shadow-sm bg-light">
+    <div class="mb-3">
+        <label class="form-label" for="bidderName">Nom :</label>
+        <input id="bidderName" class="form-control" @bind="NewBidderName" placeholder="Nom de l'enchérisseur" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="bidList">Enchères (séparées par des virgules) :</label>
+        <input id="bidList" class="form-control" @bind="NewBidList" placeholder="Exemple : 100,120,130" />
+    </div>
+
+    <button type="button" class="btn btn-primary w-100" @onclick="AddBidder">
+        Ajouter
+    </button>
+</form>
+
+@code {
+    [Parameter]
+    public EventCallback<Bidder> OnBidderAdded { get; set; }
+
+    private string NewBidderName { get; set; } = string.Empty;
+    private string NewBidList { get; set; } = string.Empty;
+
+    private void AddBidder()
+    {
+        if (string.IsNullOrWhiteSpace(NewBidderName) || string.IsNullOrWhiteSpace(NewBidList))
+            return;
+
+        var bids = NewBidList
+        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+        .Select(b => int.TryParse(b, out var bid) ? bid : 0)
+        .Where(b => b > 0)
+        .ToList();
+
+        if (bids.Any())
+        {
+            var newBidder = new Bidder(NewBidderName, bids);
+            OnBidderAdded.InvokeAsync(newBidder);
+            NewBidderName = string.Empty;
+            NewBidList    = string.Empty;
+        }
+    }
+}
