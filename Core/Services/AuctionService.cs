@@ -26,11 +26,13 @@ public class AuctionService : IAuctionService
 
         // Récupérer le meilleur candidat (premier dans la liste triée)
         var winner = validBids[0];
+        
+        var secondPrice = validBids.Skip(1).Select(b => b.Bid).FirstOrDefault();
 
         return new Result
         {
             Winner       = winner.Name,
-            WinningPrice = winner.Bid
+            WinningPrice = secondPrice > 0 ? secondPrice : reservePrice
         };
     }
 }
