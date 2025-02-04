@@ -1,0 +1,16 @@
+﻿version: "3.9"
+
+services:
+  vickreyauction:
+    build:
+      context: .
+      dockerfile: UI/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Release
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: always
