@@ -160,13 +160,15 @@ Le projet inclut des scénarios d’utilisation directement dans les tests.
    ```
 
 2. Les cas testés incluent :
-    - ❌ Aucun enchérisseur valide → Retour attendu : "Aucun gagnant".
-    - ✅ Une seule enchère valide → Le gagnant est l’enchérisseur ayant cette enchère.
-    - 🔢 Plusieurs enchérisseurs valides → Choix du montant le plus élevé.
-    - 🔄 Cas d'égalité → Gagnant = le premier enchérisseur dans la liste des égalités.
+    - ❌ Aucun enchérisseur valide → Retour attendu : "Aucun gagnant", et le prix payé est le prix de réserve.
+    - ✅ Une seule enchère valide → Le gagnant est l’enchérisseur ayant cette enchère, mais il paiera soit la deuxième enchère valide (si disponible), soit le prix de réserve.
+    - 🔢 Plusieurs enchérisseurs valides → Le gagnant est celui avec la plus haute enchère valide, mais il paiera la deuxième meilleure enchère valide (ou le prix de réserve si aucune n'est disponible).
+    - 🔄 Cas d'égalité → En cas d'égalité sur la plus haute enchère, le gagnant est déterminé par l'ordre de priorité (le premier enchérisseur dans la liste).
+    - 🏷️ Aucun second prix valide disponible → Si le gagnant est le seul enchérisseur valide ou qu'aucune autre enchère ne dépasse le prix de réserve, le gagnant paie le prix de réserve.
+
 
 3. **Ajouter des cas d’utilisation directs dans les tests** :
-    - Par exemple : Ajouter des enchérisseurs avec des enchères précises et vérifier manuellement leurs résultats.
+    - Par exemple : Ajouter des enchérisseurs avec des enchères précises, y compris des égalités ou des enchères inférieures au prix de réserve, et vérifier que le gagnant et le prix payé respectent la logique d'enchères au second prix.
 
 ---
 
@@ -207,14 +209,17 @@ Le projet inclut des scénarios d’utilisation directement dans les tests.
 
 ## 🔄 Améliorations futures
 
-1. 🔒 **Ajouter une authentification**:
+1. 🔒 **Ajouter une authentification** :
     - Gestion des rôles utilisateur (enchérisseur, administrateur).
-2. 🏆 **Étendre la logique Vickrey**:
-    - Implémenter des enchères au second prix.
-3. 📊 **Statistiques enrichies**:
-    - Afficher des tableaux de bord détaillés pour les enchères.
-4. 🛠 **Automatiser les imports**:
-    - Ajout d’un outil pour configurer les enchérisseurs et enchères via un modèle spécifique.
+2. 📊 **Statistiques enrichies** :
+    - Afficher des tableaux de bord détaillés pour les enchères, y compris :
+        - Nombre total d'enchérisseurs.
+        - Évolution des enchères par utilisateur.
+        - Analyse des enchères gagnantes (second prix, prix final).
+3. 🛠 **Améliorer la gestion des imports** :
+    - Ajouter un outil avancé pour importer/enregistrer des enchérisseurs et enchères via des fichiers JSON ou CSV avec validation en temps réel.
+4. 📤 **Exporter les résultats des enchères** :
+    - Générer des rapports détaillés (en PDF ou Excel) pour chaque enchère, incluant le gagnant, le prix payé, et la liste des enchères valides.
 
 ---
 
