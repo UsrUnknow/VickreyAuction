@@ -1,7 +1,7 @@
 using Core.Models;
 using Core.Services;
 
-namespace Tests;
+namespace Tests.Services;
 
 public class AuctionServiceTests
 {
@@ -32,8 +32,8 @@ public class AuctionServiceTests
         var service = new AuctionService();
         var result  = service.DetermineWinner(100, bidders);
 
-        Assert.Equal("A", result.Winner); // L'unique enchérisseur gagne
-        Assert.Equal(150, result.WinningPrice); // Leur enchère maximale est attribuée comme prix gagnant
+        Assert.Equal("A", result.Winner);
+        Assert.Equal(120, result.WinningPrice);
     }
 
     [Fact]
@@ -49,8 +49,8 @@ public class AuctionServiceTests
         var service = new AuctionService();
         var result  = service.DetermineWinner(80, bidders);
 
-        Assert.Equal("B", result.Winner); // L'enchérisseur B a la plus haute enchère valide (120)
-        Assert.Equal(120, result.WinningPrice);
+        Assert.Equal("B", result.Winner);
+        Assert.Equal(100, result.WinningPrice);
     }
 
     [Fact]
@@ -65,8 +65,8 @@ public class AuctionServiceTests
         var service = new AuctionService();
         var result  = service.DetermineWinner(50, bidders);
 
-        Assert.Equal("A", result.Winner); // En cas d'égalité, la priorité est donnée au premier enchérisseur
-        Assert.Equal(100, result.WinningPrice); // La plus haute enchère reste 100
+        Assert.Equal("A", result.Winner);
+        Assert.Equal(100, result.WinningPrice);
     }
 
     [Fact]
@@ -82,20 +82,20 @@ public class AuctionServiceTests
         var service = new AuctionService();
         var result  = service.DetermineWinner(50, bidders);
 
-        Assert.Equal("No Winner", result.Winner); // Aucune enchère ne dépasse le prix de réserve
-        Assert.Equal(50, result.WinningPrice);    // Résultat : prix de réserve
+        Assert.Equal("No Winner", result.Winner);
+        Assert.Equal(50, result.WinningPrice);
     }
 
     [Fact]
     public void Test_EmptyListOfBidders()
     {
-        var bidders = new List<Bidder>(); // Liste vide
+        var bidders = new List<Bidder>();
 
         var service = new AuctionService();
         var result  = service.DetermineWinner(50, bidders);
 
-        Assert.Equal("No Winner", result.Winner); // Aucun participant, aucun gagnant
-        Assert.Equal(50, result.WinningPrice);    // Prix de réserve
+        Assert.Equal("No Winner", result.Winner);
+        Assert.Equal(50, result.WinningPrice);
     }
 
     [Fact]
@@ -103,15 +103,15 @@ public class AuctionServiceTests
     {
         var bidders = new List<Bidder>
         {
-            new("A", new List<int>{50, -10, 30}), // Une enchère négative est incluse (doit être ignorée)
-            new("B", new List<int>{45, 0})       // Aucune enchère valide
+            new("A", new List<int>{50, -10, 30}),
+            new("B", new List<int>{45, 0})
         };
 
         var service = new AuctionService();
         var result  = service.DetermineWinner(40, bidders);
 
-        Assert.Equal("A", result.Winner); // Seule l'enchérisseur A a une enchère valide au-dessus du prix de réserve
-        Assert.Equal(50, result.WinningPrice); // La seule enchère valide et la plus élevée : 50
+        Assert.Equal("A", result.Winner);
+        Assert.Equal(45, result.WinningPrice);
     }
 
     [Fact]
@@ -120,15 +120,15 @@ public class AuctionServiceTests
         var bidders = new List<Bidder>
         {
             new("A", new List<int>{20, 50}),
-            new("B", new List<int>{50}), // Enchère exacte au prix de réserve
+            new("B", new List<int>{50}),
             new("C", new List<int>{10})
         };
 
         var service = new AuctionService();
         var result  = service.DetermineWinner(50, bidders);
 
-        Assert.Equal("A", result.Winner);      // "A" devrait être premier dans la liste
-        Assert.Equal(50, result.WinningPrice); // La plus haute enchère valide est 50
+        Assert.Equal("A", result.Winner);
+        Assert.Equal(50, result.WinningPrice);
     }
 
     [Fact]
@@ -144,7 +144,57 @@ public class AuctionServiceTests
         var service = new AuctionService();
         var result  = service.DetermineWinner(0, bidders); // Aucune restriction sur le prix de réserve
 
-        Assert.Equal("C", result.Winner); // L'enchérisseur C est le gagnant avec 35
-        Assert.Equal(35, result.WinningPrice);
+        Assert.Equal("C", result.Winner);
+        Assert.Equal(30, result.WinningPrice);
+    }
+    
+    [Fact]
+    public void Test_WinningBidder_PaysSecondHighestPrice()
+    {
+        var bidders = new List<Bidder>
+        {
+            new("A", new List<int>{100}),
+            new("B", new List<int>{90, 80}),
+            new("C", new List<int>{70})
+        };
+
+        var service = new AuctionService();
+        var result  = service.DetermineWinner(50, bidders);
+
+        Assert.Equal("A", result.Winner);
+        Assert.Equal(90, result.WinningPrice);
+    }
+    
+    [Fact]
+    public void Test_WinningPrice_IsReserve_WhenNoSecondHighestBid()
+    {
+        var bidders = new List<Bidder>
+        {
+            new("A", new List<int>{100}),
+            new("B", new List<int>{30, 40})
+        };
+
+        var service = new AuctionService();
+        var result  = service.DetermineWinner(50, bidders);
+
+        Assert.Equal("A", result.Winner);
+        Assert.Equal(50, result.WinningPrice);
+    }
+    
+    [Fact]
+    public void Test_TiedHighestBids_WinnerPaysSecondPrice()
+    {
+        var bidders = new List<Bidder>
+        {
+            new("A", new List<int>{100}),
+            new("B", new List<int>{100}),
+            new("C", new List<int>{90})
+        };
+
+        var service = new AuctionService();
+        var result  = service.DetermineWinner(50, bidders);
+
+        Assert.Equal("A", result.Winner);
+        Assert.Equal(100, result.WinningPrice);
     }
 }
